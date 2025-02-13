@@ -8,32 +8,33 @@
 import Foundation
 import Metal
 
-class AtomicSwap {
+class Atomic<T> {
     private var mutex = pthread_mutex_t()
-    private var index: Int = 0
+    private var value: T
 
-    init() {
+    init(value: T) {
         pthread_mutex_init(&mutex, nil)
+        self.value = value
     }
 
     deinit {
         pthread_mutex_destroy(&mutex)
     }
 
-    func swap() {
+    func set(_ value: T) {
         pthread_mutex_lock(&mutex)
         defer {
             pthread_mutex_unlock(&mutex)
         }
-        index = (index + 1) % 2
+        self.value = value
     }
 
-    func get() -> Int {
+    func get() -> T {
         pthread_mutex_lock(&mutex)
         defer {
             pthread_mutex_unlock(&mutex)
         }
-        return index
+        return value
     }
 }
 
@@ -73,12 +74,12 @@ open class AEParticleSystem: AEGameObject {
 
     private var updateBuffers: [MTLBuffer] = []
     private var renderBuffers: [MTLBuffer] = []
-    private var renderTarget: AtomicSwap = .init()
+    private var renderTarget: Atomic<Int> = .init(value: 0)
     private var aliveCounterBuffer: MTLBuffer!
 
-    private var aliveCount: UInt32 = 0
+    private var aliveCount: Atomic<UInt32> = .init(value: 0)
     private var deadCount: UInt32 {
-        UInt32(maxCount) - aliveCount
+        UInt32(maxCount) - aliveCount.get()
     }
 
     private var birthAcc: Float = 0
@@ -122,7 +123,9 @@ open class AEParticleSystem: AEGameObject {
     public override func performUpdate(deltaTime: Float) {
         let aliveParticlesPtr = self.aliveCounterBuffer.contents().bindMemory(
             to: UInt32.self, capacity: 1)
-        self.aliveCount = min(aliveParticlesPtr.pointee, UInt32(self.maxCount))
+        self.aliveCount.set(
+            min(aliveParticlesPtr.pointee, UInt32(self.maxCount))
+        )
 
         let commandBuffer = AERenderer.commandQueue.makeCommandBuffer()!
 
@@ -134,7 +137,7 @@ open class AEParticleSystem: AEGameObject {
             self.birthAcc -= Float(emitCount)
         }
 
-        if aliveCount > 0 {
+        if aliveCount.get() > 0 {
             updateParticles(commandBuffer: commandBuffer)
         }
 
@@ -146,7 +149,9 @@ open class AEParticleSystem: AEGameObject {
 
         commandBuffer.addCompletedHandler { _ in
             self.updateBuffers.swapAt(0, 1)
-            self.renderTarget.swap()
+            self.renderTarget.set(
+                (self.renderTarget.get() + 1) % 2
+            )
         }
 
         commandBuffer.commit()
@@ -161,7 +166,7 @@ open class AEParticleSystem: AEGameObject {
             scale: emitterParams.scale.simd,
             velocity: emitterParams.velocity.simd,
             lifeTime: emitterParams.lifeTime.simd,
-            aliveParticles: aliveCount,
+            aliveParticles: aliveCount.get(),
             rngSeedX: .random(in: 0...100),
             rngSeedY: .random(in: 0...100)
         )
@@ -194,7 +199,7 @@ open class AEParticleSystem: AEGameObject {
         let width = state.threadExecutionWidth
         let threadsPerThreadGroup = MTLSize(width: width, height: 1, depth: 1)
 
-        let threadsPerGrid = MTLSize(width: Int(aliveCount), height: 1, depth: 1)
+        let threadsPerGrid = MTLSize(width: Int(aliveCount.get()), height: 1, depth: 1)
         commandEncoder.setComputePipelineState(state)
         commandEncoder.setBuffer(updateBuffers[0], offset: 0, index: 0)
         commandEncoder.setBytes(
@@ -252,7 +257,7 @@ open class AEParticleSystem: AEGameObject {
     }
 
     public override func performRender(commandEncoder: MTLRenderCommandEncoder) {
-        if aliveCount == 0 {
+        if aliveCount.get() == 0 {
             return
         }
 
@@ -281,7 +286,7 @@ open class AEParticleSystem: AEGameObject {
             indexType: .uint32,
             indexBuffer: buffer.indices,
             indexBufferOffset: 0,
-            instanceCount: Int(aliveCount)
+            instanceCount: Int(aliveCount.get())
         )
     }
 }
