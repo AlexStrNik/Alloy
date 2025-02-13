@@ -21,7 +21,9 @@ open class AEGameObject {
 
     private var destroyed: Bool = false
 
-    func performUpdate(deltaTime: Float) {
+    public init() {}
+
+    public func performUpdate(deltaTime: Float) {
         forEach { child in
             child.performUpdate(deltaTime: deltaTime)
             if child.destroyed {
@@ -37,19 +39,19 @@ open class AEGameObject {
         }
     }
 
-    func initialize() {
+    public func initialize() {
         forEach { child in
             child.initialize()
         }
     }
 
-    func performRender(commandEncoder: MTLRenderCommandEncoder) {
+    public func performRender(commandEncoder: MTLRenderCommandEncoder) {
         forEach { child in
             child.performRender(commandEncoder: commandEncoder)
         }
     }
 
-    func addChild(_ gameObject: AEGameObject) {
+    public func addChild(_ gameObject: AEGameObject) {
         gameObject.parent = self
         gameObject.transform.parent = self.transform
 
@@ -63,7 +65,7 @@ open class AEGameObject {
         tail = gameObject
     }
 
-    func destroy() {
+    public func destroy() {
         self.destroyed = true
     }
 

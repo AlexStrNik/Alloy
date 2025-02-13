@@ -17,7 +17,7 @@ open class AEMeshObject: AEGameObject {
         self.material = material
     }
 
-    override func performRender(commandEncoder: MTLRenderCommandEncoder) {
+    public override func performRender(commandEncoder: MTLRenderCommandEncoder) {
         let state = self.material.load()
 
         commandEncoder.setRenderPipelineState(state)

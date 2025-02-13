@@ -54,7 +54,7 @@ open class AEParticleSystem: AEGameObject {
         self.particleParams = particleParams
     }
 
-    override func initialize() {
+    public override func initialize() {
         particleBuffers = [
             AERenderer.device.makeBuffer(
                 length: MemoryLayout<Particle>.stride * maxCount
@@ -68,7 +68,7 @@ open class AEParticleSystem: AEGameObject {
         )
     }
 
-    override func performUpdate(deltaTime: Float) {
+    public override func performUpdate(deltaTime: Float) {
         let aliveParticlesPtr = self.aliveCounterBuffer.contents().bindMemory(
             to: UInt32.self, capacity: 1)
         self.aliveCount = min(aliveParticlesPtr.pointee, UInt32(self.maxCount))
@@ -183,7 +183,7 @@ open class AEParticleSystem: AEGameObject {
         blitEncoder.endEncoding()
     }
 
-    override func performRender(commandEncoder: MTLRenderCommandEncoder) {
+    public override func performRender(commandEncoder: MTLRenderCommandEncoder) {
         if aliveCount == 0 {
             return
         }

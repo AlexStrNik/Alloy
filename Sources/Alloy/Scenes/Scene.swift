@@ -25,7 +25,7 @@ open class AEScene: AEAsset {
         projectionMatrix: matrix_identity_float4x4
     )
 
-    init(gameObjects: [AEGameObject], currentCamera: AECamera) {
+    public init(gameObjects: [AEGameObject], currentCamera: AECamera) {
         self.sceneObject = .init()
 
         for gameObject in gameObjects {
