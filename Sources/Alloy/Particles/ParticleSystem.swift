@@ -193,7 +193,7 @@ open class AEParticleSystem: AEGameObject {
         let commandEncoder = commandBuffer.makeComputeCommandEncoder()!
         let state = AEComputeStates.makeComputeState(for: particleSystemAsset.emitShader)
 
-        var emitterUniforms = EmitterUniforms(
+        var emitterUniforms = AEEmitterUniforms(
             position: emitterParams.position.simd,
             scale: emitterParams.scale.simd,
             velocity: emitterParams.velocity.simd,
@@ -214,7 +214,7 @@ open class AEParticleSystem: AEGameObject {
         commandEncoder.setComputePipelineState(state)
         commandEncoder.setBuffer(updateBuffers[0], offset: 0, index: 0)
         commandEncoder.setBytes(
-            &emitterUniforms, length: MemoryLayout<EmitterUniforms>.stride, index: 1)
+            &emitterUniforms, length: MemoryLayout<AEEmitterUniforms>.stride, index: 1)
         commandEncoder.setBytes(
             &modelUniforms, length: MemoryLayout<AEModelUniforms>.stride, index: 2)
         commandEncoder.dispatchThreads(

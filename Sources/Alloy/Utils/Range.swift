@@ -8,7 +8,7 @@
 import Foundation
 import simd
 
-public struct Range {
+public struct AERange {
     public var min: Float
     public var max: Float
 
@@ -22,17 +22,17 @@ public struct Range {
         self.max = fixed
     }
 
-    var simd: SIMD2<Float> {
+    public var simd: SIMD2<Float> {
         SIMD2(min, max)
     }
 }
 
-public struct Range3 {
-    public var x: Range
-    public var y: Range
-    public var z: Range
+public struct AERange3 {
+    public var x: AERange
+    public var y: AERange
+    public var z: AERange
 
-    public init(x: Range, y: Range, z: Range) {
+    public init(x: AERange, y: AERange, z: AERange) {
         self.x = x
         self.y = y
         self.z = z
@@ -44,7 +44,7 @@ public struct Range3 {
         self.z = .init(min: min, max: max)
     }
 
-    var simd: matrix_float3x2 {
+    public var simd: matrix_float3x2 {
         .init(
             x.simd,
             y.simd,
