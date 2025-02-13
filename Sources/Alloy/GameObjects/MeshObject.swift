@@ -8,7 +8,7 @@
 import Foundation
 import Metal
 
-public class AEMeshObject: AEGameObject {
+open class AEMeshObject: AEGameObject {
     var mesh: any AEMesh
     var material: any AEMaterial
 

@@ -11,7 +11,7 @@ import simd
 
 private class SceneObject: AEGameObject {}
 
-public class AEScene: AEAsset {
+open class AEScene: AEAsset {
     private var sceneObject: SceneObject
 
     var currentCamera: AECamera

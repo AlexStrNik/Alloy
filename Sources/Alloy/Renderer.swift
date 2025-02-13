@@ -8,7 +8,7 @@
 import Foundation
 import MetalKit
 
-public class AERenderer: NSObject, MTKViewDelegate {
+open class AERenderer: NSObject, MTKViewDelegate {
     static var device: MTLDevice!
     static var library: MTLLibrary!
     static var commandQueue: MTLCommandQueue!

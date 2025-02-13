@@ -9,7 +9,7 @@ import Foundation
 import Metal
 import simd
 
-public class AECamera: AEGameObject {
+open class AECamera: AEGameObject {
     var fov: Float = 60 {
         didSet {
             updateProjectionMatrix()

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class AEPlane: AEMesh {
+open class AEPlane: AEMesh {
     var name: String = "Plane"
 
     private var vertices: [Vertex] = [

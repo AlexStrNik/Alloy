@@ -8,7 +8,7 @@
 import Foundation
 import Metal
 
-public class AEGameObject {
+open class AEGameObject {
     var transform: AETransform = .init()
 
     private(set) var parent: AEGameObject?

@@ -8,7 +8,7 @@
 import Foundation
 import Metal
 
-public class AEShader: AEAsset {
+open class AEShader: AEAsset {
     let name: String
 
     private var function: MTLFunction?

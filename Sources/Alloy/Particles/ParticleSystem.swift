@@ -8,7 +8,7 @@
 import Foundation
 import Metal
 
-public class AEParticlesAsset: AEAsset {
+open class AEParticlesAsset: AEAsset {
     private init() {}
 
     static let shared: AEParticlesAsset = .init()
@@ -28,7 +28,7 @@ public class AEParticlesAsset: AEAsset {
     }
 }
 
-public class AEParticleSystem: AEGameObject {
+open class AEParticleSystem: AEGameObject {
     var emitterParams: AEEmitterParams
     var particleParams: AEParticleParams
 

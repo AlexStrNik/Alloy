@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class AEDefaultAssets: AEAsset {
+open class AEDefaultAssets: AEAsset {
     static let shared: AEDefaultAssets = .init()
 
     private var assets: [any AEAsset] = [

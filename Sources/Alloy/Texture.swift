@@ -9,7 +9,7 @@ import Foundation
 import Metal
 import MetalKit
 
-public class AETexture: AEAsset {
+open class AETexture: AEAsset {
     let url: URL
 
     private var texture: MTLTexture?

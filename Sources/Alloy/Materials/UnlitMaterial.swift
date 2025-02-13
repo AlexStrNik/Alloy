@@ -8,7 +8,7 @@
 import Foundation
 import Metal
 
-public class AEUnlitMaterial: AEMaterial {
+open class AEUnlitMaterial: AEMaterial {
     private var state: MTLRenderPipelineState?
 
     func getVertexShader() -> AEShader {

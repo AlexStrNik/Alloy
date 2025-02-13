@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class AEMeshesAsset: AEAsset {
+open class AEMeshesAsset: AEAsset {
     private init() {}
 
     static let shared: AEMeshesAsset = .init()
@@ -21,7 +21,7 @@ public class AEMeshesAsset: AEAsset {
     }
 }
 
-public class AEMeshes {
+open class AEMeshes {
     private init() {}
 
     static let plane: AEPlane = {

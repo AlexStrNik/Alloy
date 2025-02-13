@@ -9,7 +9,7 @@ import Foundation
 import MetalKit
 import ModelIO
 
-public class AEModelMesh: AEMesh {
+open class AEModelMesh: AEMesh {
     var url: URL
 
     init(url: URL) {

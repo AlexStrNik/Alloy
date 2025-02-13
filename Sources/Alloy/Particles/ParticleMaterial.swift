@@ -8,7 +8,7 @@
 import Foundation
 import Metal
 
-public class AEParticleMaterial: AEUnlitMaterial {
+open class AEParticleMaterial: AEUnlitMaterial {
     override func getVertexShader() -> AEShader {
         AEShader(named: "particles_vertex_shader")
     }

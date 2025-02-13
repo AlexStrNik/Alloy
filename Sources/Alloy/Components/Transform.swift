@@ -8,7 +8,7 @@
 import Foundation
 import simd
 
-public class AETransform {
+open class AETransform {
     var parent: AETransform?
 
     var position: SIMD3<Float> = .zero {
