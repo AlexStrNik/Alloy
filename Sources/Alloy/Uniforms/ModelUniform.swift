@@ -8,6 +8,6 @@
 import Foundation
 import simd
 
-struct ModelUniforms {
-    var modelMatrix: float4x4
+public struct AEModelUniforms {
+    public var modelMatrix: float4x4
 }

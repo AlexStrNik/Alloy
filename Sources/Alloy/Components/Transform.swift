@@ -30,7 +30,7 @@ open class AETransform {
 
     private var _matrix: float4x4 = matrix_identity_float4x4
 
-    var matrix: float4x4 {
+    public var matrix: float4x4 {
         matrix_multiply(parent?.matrix ?? matrix_identity_float4x4, _matrix)
     }
 

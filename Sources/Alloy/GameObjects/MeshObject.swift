@@ -25,16 +25,17 @@ open class AEMeshObject: AEGameObject {
 
         let buffer = self.mesh.load()
 
-        var modelUniforms = ModelUniforms(
+        var modelUniforms = AEModelUniforms(
             modelMatrix: self.transform.matrix
         )
 
         commandEncoder.setVertexBuffer(buffer.vertices, offset: 0, index: 0)
         commandEncoder.setVertexBytes(
-            &AERenderer.currentScene!.uniforms, length: MemoryLayout<SceneUniforms>.stride, index: 1
+            &AERenderer.currentScene!.uniforms, length: MemoryLayout<AESceneUniforms>.stride,
+            index: 1
         )
         commandEncoder.setVertexBytes(
-            &modelUniforms, length: MemoryLayout<ModelUniforms>.stride, index: 2)
+            &modelUniforms, length: MemoryLayout<AEModelUniforms>.stride, index: 2)
 
         material.encode(to: commandEncoder)
 

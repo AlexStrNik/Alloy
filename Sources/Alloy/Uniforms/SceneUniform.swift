@@ -8,9 +8,9 @@
 import Foundation
 import simd
 
-struct SceneUniforms {
-    var iTime: Float
-    var deltaTime: Float
-    var viewMatrix: float4x4
-    var projectionMatrix: float4x4
+public struct AESceneUniforms {
+    public var iTime: Float
+    public var deltaTime: Float
+    public var viewMatrix: float4x4
+    public var projectionMatrix: float4x4
 }

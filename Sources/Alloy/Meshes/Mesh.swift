@@ -10,9 +10,9 @@ import Metal
 import simd
 
 public struct AEMeshBuffer {
-    var vertices: MTLBuffer
-    var indices: MTLBuffer
-    var indexCount: Int
+    public var vertices: MTLBuffer
+    public var indices: MTLBuffer
+    public var indexCount: Int
 }
 
 public protocol AEMesh: AEAsset where AssetType == AEMeshBuffer {

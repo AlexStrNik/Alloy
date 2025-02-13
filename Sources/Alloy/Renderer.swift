@@ -15,7 +15,7 @@ open class AERenderer: NSObject, MTKViewDelegate {
     static var commandQueue: MTLCommandQueue!
     static var textureLoader: MTKTextureLoader!
 
-    static var currentScene: AEScene?
+    public static var currentScene: AEScene?
 
     public static var colorPixelFormat: MTLPixelFormat!
     public static var depthStencilPixelFormat: MTLPixelFormat!

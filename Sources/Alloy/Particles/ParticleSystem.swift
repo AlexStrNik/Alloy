@@ -112,7 +112,7 @@ open class AEParticleSystem: AEGameObject {
             rngSeedY: .random(in: 0...100)
         )
 
-        var modelUniforms = ModelUniforms(
+        var modelUniforms = AEModelUniforms(
             modelMatrix: self.transform.matrix
         )
 
@@ -125,7 +125,7 @@ open class AEParticleSystem: AEGameObject {
         commandEncoder.setBytes(
             &emitterUniforms, length: MemoryLayout<EmitterUniforms>.stride, index: 1)
         commandEncoder.setBytes(
-            &modelUniforms, length: MemoryLayout<ModelUniforms>.stride, index: 2)
+            &modelUniforms, length: MemoryLayout<AEModelUniforms>.stride, index: 2)
         commandEncoder.dispatchThreads(
             threadsPerGrid, threadsPerThreadgroup: threadsPerThreadGroup
         )
@@ -144,7 +144,8 @@ open class AEParticleSystem: AEGameObject {
         commandEncoder.setComputePipelineState(state)
         commandEncoder.setBuffer(particleBuffers[0], offset: 0, index: 0)
         commandEncoder.setBytes(
-            &AERenderer.currentScene!.uniforms, length: MemoryLayout<SceneUniforms>.stride, index: 1
+            &AERenderer.currentScene!.uniforms, length: MemoryLayout<AESceneUniforms>.stride,
+            index: 1
         )
         commandEncoder.dispatchThreads(
             threadsPerGrid, threadsPerThreadgroup: threadsPerThreadGroup
@@ -197,7 +198,8 @@ open class AEParticleSystem: AEGameObject {
 
         commandEncoder.setVertexBuffer(buffer.vertices, offset: 0, index: 0)
         commandEncoder.setVertexBytes(
-            &AERenderer.currentScene!.uniforms, length: MemoryLayout<SceneUniforms>.stride, index: 1
+            &AERenderer.currentScene!.uniforms, length: MemoryLayout<AESceneUniforms>.stride,
+            index: 1
         )
         commandEncoder.setVertexBuffer(particleBuffers[0], offset: 0, index: 2)
 

@@ -18,7 +18,7 @@ open class AEScene: AEAsset {
 
     var currentTime: Float = 0
 
-    var uniforms: SceneUniforms = .init(
+    public var uniforms: AESceneUniforms = .init(
         iTime: 0,
         deltaTime: 0,
         viewMatrix: matrix_identity_float4x4,
