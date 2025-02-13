@@ -177,6 +177,8 @@ open class AEParticleSystem: AEGameObject {
         }
 
         commandBuffer.commit()
+        // TODO: remove only to debug race conditions
+        commandBuffer.waitUntilCompleted()
     }
 
     private func emitParticles(count: UInt32, commandBuffer: MTLCommandBuffer) {
