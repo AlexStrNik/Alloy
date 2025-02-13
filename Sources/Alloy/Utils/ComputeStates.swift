@@ -10,11 +10,11 @@ import Metal
 
 struct ComputeStatesCache {
     private var cache: [String: MTLComputePipelineState] = [:]
-    
+
     static var shared: ComputeStatesCache = .init()
-    
+
     private init() {}
-    
+
     subscript(_ name: String) -> MTLComputePipelineState? {
         get {
             return cache[name]
@@ -25,17 +25,17 @@ struct ComputeStatesCache {
     }
 }
 
-struct ComputeStates {
-    static func makeComputeState(for shader: AEShader) -> MTLComputePipelineState {
+public struct AEComputeStates {
+    public static func makeComputeState(for shader: AEShader) -> MTLComputePipelineState {
         if let state = ComputeStatesCache.shared[shader.name] {
             return state
         }
-        
+
         let state = try! AERenderer.device.makeComputePipelineState(function: shader.load())
         ComputeStatesCache.shared[shader.name] = state
-        
+
         return state
     }
-    
-    private init () {}
+
+    private init() {}
 }

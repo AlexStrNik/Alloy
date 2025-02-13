@@ -7,11 +7,18 @@
 
 import Foundation
 
-struct Particle {
-    var position: SIMD3<Float>
-    var velocity: SIMD3<Float>
-    var scale: Float
-    var age: Float
+public struct AEParticle {
+    public var position: SIMD3<Float>
+    public var velocity: SIMD3<Float>
+    public var scale: Float
+    public var age: Float
+
+    public init(position: SIMD3<Float>, velocity: SIMD3<Float>, scale: Float, age: Float) {
+        self.position = position
+        self.velocity = velocity
+        self.scale = scale
+        self.age = age
+    }
 }
 
 public struct AEParticleParams {

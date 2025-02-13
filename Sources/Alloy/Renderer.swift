@@ -11,9 +11,9 @@ import MetalKit
 open class AERenderer: NSObject, MTKViewDelegate {
     public static var device: MTLDevice!
     static var internalLibrary: MTLLibrary!
-    static var library: MTLLibrary!
-    static var commandQueue: MTLCommandQueue!
-    static var textureLoader: MTKTextureLoader!
+    public static var library: MTLLibrary!
+    public static var commandQueue: MTLCommandQueue!
+    public static var textureLoader: MTKTextureLoader!
 
     public static var currentScene: AEScene?
 
