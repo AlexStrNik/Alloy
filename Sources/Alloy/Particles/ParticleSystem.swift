@@ -9,15 +9,23 @@ import Foundation
 import Metal
 
 open class AEParticlesAsset: AEAsset {
-    private init() {}
+    public init() {
+        self.emitShader = AEShader(named: "emit_particles", isInternal: true)
+        self.updateShader = AEShader(named: "update_particles", isInternal: true)
+        self.sortShader = AEShader(named: "sort_particles", isInternal: true)
+    }
 
-    static let shared: AEParticlesAsset = .init()
+    public init(emitShader: AEShader, updateShader: AEShader, sortShader: AEShader) {
+        self.emitShader = emitShader
+        self.updateShader = updateShader
+        self.sortShader = sortShader
+    }
 
-    let emitShader: AEShader = AEShader(named: "emit_particles", isInternal: true)
+    public static let `default`: AEParticlesAsset = .init()
 
-    let updateShader: AEShader = AEShader(named: "update_particles", isInternal: true)
-
-    let sortShader: AEShader = AEShader(named: "sort_particles", isInternal: true)
+    public let emitShader: AEShader
+    public let updateShader: AEShader
+    public let sortShader: AEShader
 
     private var assets: [any AEAsset] {
         [emitShader, updateShader, sortShader]
@@ -31,6 +39,7 @@ open class AEParticlesAsset: AEAsset {
 open class AEParticleSystem: AEGameObject {
     public var emitterParams: AEEmitterParams
     public var particleParams: AEParticleParams
+    public var particleSystemAsset: AEParticlesAsset
 
     private var maxCount: Int
 
@@ -49,11 +58,13 @@ open class AEParticleSystem: AEGameObject {
     public init(
         maxCount: Int,
         emitterParams: AEEmitterParams,
-        particleParams: AEParticleParams
+        particleParams: AEParticleParams,
+        particleSystemAsset: AEParticlesAsset = AEParticlesAsset.default
     ) {
         self.maxCount = maxCount
         self.emitterParams = emitterParams
         self.particleParams = particleParams
+        self.particleSystemAsset = particleSystemAsset
     }
 
     public override func initialize() {
@@ -113,7 +124,7 @@ open class AEParticleSystem: AEGameObject {
 
     private func emitParticles(count: UInt32, commandBuffer: MTLCommandBuffer) {
         let commandEncoder = commandBuffer.makeComputeCommandEncoder()!
-        let state = ComputeStates.makeComputeState(for: AEParticlesAsset.shared.emitShader)
+        let state = ComputeStates.makeComputeState(for: particleSystemAsset.emitShader)
 
         var emitterUniforms = EmitterUniforms(
             position: emitterParams.position.simd,
@@ -148,7 +159,7 @@ open class AEParticleSystem: AEGameObject {
 
     private func updateParticles(commandBuffer: MTLCommandBuffer) {
         let commandEncoder = commandBuffer.makeComputeCommandEncoder()!
-        let state = ComputeStates.makeComputeState(for: AEParticlesAsset.shared.updateShader)
+        let state = ComputeStates.makeComputeState(for: particleSystemAsset.updateShader)
 
         let width = state.threadExecutionWidth
         let threadsPerThreadGroup = MTLSize(width: width, height: 1, depth: 1)
@@ -169,7 +180,7 @@ open class AEParticleSystem: AEGameObject {
 
     private func sortParticles(commandBuffer: MTLCommandBuffer) {
         let commandEncoder = commandBuffer.makeComputeCommandEncoder()!
-        let state = ComputeStates.makeComputeState(for: AEParticlesAsset.shared.sortShader)
+        let state = ComputeStates.makeComputeState(for: particleSystemAsset.sortShader)
 
         let width = state.threadExecutionWidth
         let threadsPerThreadGroup = MTLSize(width: width, height: 1, depth: 1)
