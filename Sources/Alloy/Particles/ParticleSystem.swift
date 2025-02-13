@@ -127,22 +127,27 @@ open class AEParticleSystem: AEGameObject {
     public override func initialize() {
         updateBuffers = [
             AERenderer.device.makeBuffer(
-                length: MemoryLayout<AEParticle>.stride * maxCount
+                length: MemoryLayout<AEParticle>.stride * maxCount,
+                options: .storageModePrivate
             )!,
             AERenderer.device.makeBuffer(
-                length: MemoryLayout<AEParticle>.stride * maxCount
+                length: MemoryLayout<AEParticle>.stride * maxCount,
+                options: .storageModePrivate
             )!,
         ]
         renderBuffers = [
             AERenderer.device.makeBuffer(
-                length: MemoryLayout<AEParticle>.stride * maxCount
+                length: MemoryLayout<AEParticle>.stride * maxCount,
+                options: .storageModePrivate
             )!,
             AERenderer.device.makeBuffer(
-                length: MemoryLayout<AEParticle>.stride * maxCount
+                length: MemoryLayout<AEParticle>.stride * maxCount,
+                options: .storageModePrivate
             )!,
         ]
         aliveCounterBuffer = AERenderer.device.makeBuffer(
-            length: MemoryLayout<UInt32>.stride
+            length: MemoryLayout<UInt32>.stride,
+            options: .storageModeShared
         )
     }
 
@@ -185,8 +190,6 @@ open class AEParticleSystem: AEGameObject {
         }
 
         commandBuffer.commit()
-        // TODO: remove only to debug race conditions
-        commandBuffer.waitUntilCompleted()
     }
 
     private func emitParticles(count: UInt32, commandBuffer: MTLCommandBuffer) {
