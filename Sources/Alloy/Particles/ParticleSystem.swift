@@ -8,6 +8,35 @@
 import Foundation
 import Metal
 
+class AtomicSwap {
+    private var mutex = pthread_mutex_t()
+    private var index: Int = 0
+
+    init() {
+        pthread_mutex_init(&mutex, nil)
+    }
+
+    deinit {
+        pthread_mutex_destroy(&mutex)
+    }
+
+    func swap() {
+        pthread_mutex_lock(&mutex)
+        defer {
+            pthread_mutex_unlock(&mutex)
+        }
+        index = (index + 1) % 2
+    }
+
+    func get() -> Int {
+        pthread_mutex_lock(&mutex)
+        defer {
+            pthread_mutex_unlock(&mutex)
+        }
+        return index
+    }
+}
+
 open class AEParticlesAsset: AEAsset {
     public init() {
         self.emitShader = AEShader(named: "emit_particles", isInternal: true)
@@ -40,12 +69,13 @@ open class AEParticleSystem: AEGameObject {
     public var emitterParams: AEEmitterParams
     public var particleParams: AEParticleParams
     public var particleSystemAsset: AEParticlesAsset
+    public var depthStencilState: MTLDepthStencilState?
 
     private var maxCount: Int
 
     private var updateBuffers: [MTLBuffer] = []
     private var renderBuffers: [MTLBuffer] = []
-    private var renderSwapFlag: Bool = false
+    private var renderTarget: AtomicSwap = .init()
     private var aliveCounterBuffer: MTLBuffer!
 
     private var aliveCount: UInt32 = 0
@@ -59,12 +89,14 @@ open class AEParticleSystem: AEGameObject {
         maxCount: Int,
         emitterParams: AEEmitterParams,
         particleParams: AEParticleParams,
-        particleSystemAsset: AEParticlesAsset = AEParticlesAsset.default
+        particleSystemAsset: AEParticlesAsset = AEParticlesAsset.default,
+        depthStencilState: MTLDepthStencilState? = nil
     ) {
         self.maxCount = maxCount
         self.emitterParams = emitterParams
         self.particleParams = particleParams
         self.particleSystemAsset = particleSystemAsset
+        self.depthStencilState = depthStencilState ?? AEDepthStencils.makeLessDepthStencil()
     }
 
     public override func initialize() {
@@ -116,7 +148,7 @@ open class AEParticleSystem: AEGameObject {
 
         commandBuffer.addCompletedHandler { _ in
             self.updateBuffers.swapAt(0, 1)
-            self.renderSwapFlag.toggle()
+            self.renderTarget.swap()
         }
 
         commandBuffer.commit()
@@ -229,7 +261,7 @@ open class AEParticleSystem: AEGameObject {
         let state = self.particleParams.material.load()
 
         commandEncoder.setRenderPipelineState(state)
-        commandEncoder.setDepthStencilState(AEDepthStencils.makeLessDepthStencil())
+        commandEncoder.setDepthStencilState(depthStencilState)
 
         let buffer = self.particleParams.mesh.load()
 
@@ -239,13 +271,10 @@ open class AEParticleSystem: AEGameObject {
             index: 1
         )
 
-        if renderSwapFlag {
-            renderBuffers.swapAt(0, 1)
-            renderSwapFlag.toggle()
-        }
+        let renderBuffer = renderBuffers[renderTarget.get()]
 
-        commandEncoder.setVertexBuffer(renderBuffers[1], offset: 0, index: 2)
-        commandEncoder.setFragmentBuffer(renderBuffers[1], offset: 0, index: 1)
+        commandEncoder.setVertexBuffer(renderBuffer, offset: 0, index: 2)
+        commandEncoder.setFragmentBuffer(renderBuffer, offset: 0, index: 1)
         self.particleParams.material.encode(to: commandEncoder)
 
         commandEncoder.drawIndexedPrimitives(
