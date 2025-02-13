@@ -147,7 +147,7 @@ open class AEParticleSystem: AEGameObject {
         ]
         aliveCounterBuffer = AERenderer.device.makeBuffer(
             length: MemoryLayout<UInt32>.stride,
-            options: .storageModeShared
+            options: .storageModeManaged
         )
     }
 
@@ -156,8 +156,8 @@ open class AEParticleSystem: AEGameObject {
             return
         }
 
-        let aliveParticlesPtr = self.aliveCounterBuffer.contents().bindMemory(
-            to: UInt32.self, capacity: 1
+        let aliveParticlesPtr = self.aliveCounterBuffer.contents().assumingMemoryBound(
+            to: UInt32.self
         )
         self.aliveCount.set(
             min(aliveParticlesPtr.pointee, UInt32(self.maxCount))
@@ -167,10 +167,10 @@ open class AEParticleSystem: AEGameObject {
 
         self.birthAcc += deltaTime * Float(emitterParams.birthRate)
         let emitCount = max(0, min(UInt32(self.birthAcc), deadCount))
+        self.birthAcc -= floor(self.birthAcc)
 
         if emitCount > 0 {
             emitParticles(count: emitCount, commandBuffer: commandBuffer)
-            self.birthAcc -= Float(emitCount)
         }
 
         if aliveCount.get() > 0 {
@@ -194,7 +194,9 @@ open class AEParticleSystem: AEGameObject {
 
     private func emitParticles(count: UInt32, commandBuffer: MTLCommandBuffer) {
         let commandEncoder = commandBuffer.makeComputeCommandEncoder()!
-        let state = AEComputeStates.makeComputeState(for: particleSystemAsset.emitShader)
+        let state = AEComputeStates.makeComputeState(
+            for: particleSystemAsset.emitShader
+        )
 
         var emitterUniforms = AEEmitterUniforms(
             position: emitterParams.position.simd,
@@ -217,9 +219,15 @@ open class AEParticleSystem: AEGameObject {
         commandEncoder.setComputePipelineState(state)
         commandEncoder.setBuffer(updateBuffers[0], offset: 0, index: 0)
         commandEncoder.setBytes(
-            &emitterUniforms, length: MemoryLayout<AEEmitterUniforms>.stride, index: 1)
+            &emitterUniforms,
+            length: MemoryLayout<AEEmitterUniforms>.stride,
+            index: 1
+        )
         commandEncoder.setBytes(
-            &modelUniforms, length: MemoryLayout<AEModelUniforms>.stride, index: 2)
+            &modelUniforms,
+            length: MemoryLayout<AEModelUniforms>.stride,
+            index: 2
+        )
         commandEncoder.dispatchThreads(
             threadsPerGrid, threadsPerThreadgroup: threadsPerThreadGroup
         )
@@ -229,16 +237,19 @@ open class AEParticleSystem: AEGameObject {
 
     private func updateParticles(commandBuffer: MTLCommandBuffer) {
         let commandEncoder = commandBuffer.makeComputeCommandEncoder()!
-        let state = AEComputeStates.makeComputeState(for: particleSystemAsset.updateShader)
+        let state = AEComputeStates.makeComputeState(
+            for: particleSystemAsset.updateShader
+        )
 
         let width = state.threadExecutionWidth
         let threadsPerThreadGroup = MTLSize(width: width, height: 1, depth: 1)
 
-        let threadsPerGrid = MTLSize(width: Int(aliveCount.get()), height: 1, depth: 1)
+        let threadsPerGrid = MTLSize(width: maxCount, height: 1, depth: 1)
         commandEncoder.setComputePipelineState(state)
         commandEncoder.setBuffer(updateBuffers[0], offset: 0, index: 0)
         commandEncoder.setBytes(
-            &AERenderer.currentScene!.uniforms, length: MemoryLayout<AESceneUniforms>.stride,
+            &AERenderer.currentScene!.uniforms,
+            length: MemoryLayout<AESceneUniforms>.stride,
             index: 1
         )
         commandEncoder.dispatchThreads(
@@ -249,8 +260,18 @@ open class AEParticleSystem: AEGameObject {
     }
 
     private func sortParticles(commandBuffer: MTLCommandBuffer) {
+        let resetEncoder = commandBuffer.makeBlitCommandEncoder()!
+        resetEncoder.fill(
+            buffer: aliveCounterBuffer,
+            range: 0..<MemoryLayout<UInt32>.stride,
+            value: 0
+        )
+        resetEncoder.endEncoding()
+
         let commandEncoder = commandBuffer.makeComputeCommandEncoder()!
-        let state = AEComputeStates.makeComputeState(for: particleSystemAsset.sortShader)
+        let state = AEComputeStates.makeComputeState(
+            for: particleSystemAsset.sortShader
+        )
 
         let width = state.threadExecutionWidth
         let threadsPerThreadGroup = MTLSize(width: width, height: 1, depth: 1)
@@ -265,6 +286,10 @@ open class AEParticleSystem: AEGameObject {
         )
 
         commandEncoder.endEncoding()
+
+        let syncEncoder = commandBuffer.makeBlitCommandEncoder()!
+        syncEncoder.synchronize(resource: aliveCounterBuffer)
+        syncEncoder.endEncoding()
     }
 
     private func clearParticles(commandBuffer: MTLCommandBuffer) {
@@ -305,7 +330,8 @@ open class AEParticleSystem: AEGameObject {
 
         commandEncoder.setVertexBuffer(buffer.vertices, offset: 0, index: 0)
         commandEncoder.setVertexBytes(
-            &AERenderer.currentScene!.uniforms, length: MemoryLayout<AESceneUniforms>.stride,
+            &AERenderer.currentScene!.uniforms,
+            length: MemoryLayout<AESceneUniforms>.stride,
             index: 1
         )
 

@@ -67,17 +67,24 @@ kernel void update_particles(
 kernel void sort_particles(
     device Particle *particles0 [[ buffer(0) ]],
     device Particle *particles1 [[ buffer(1) ]],
-    device atomic_uint &aliveCounter [[buffer(2)]],
-    uint id [[ thread_position_in_grid ]]
-){
-    if (id == 0) {
-        atomic_store_explicit(&aliveCounter, 0, memory_order_relaxed);
+    device atomic_uint &aliveCounter [[ buffer(2) ]],
+    uint id [[ thread_position_in_grid ]],
+    uint numThreads [[ threads_per_grid ]]
+) {
+    Particle particle = particles0[id];
+
+    bool isAlive = (particle.age > 0.0);
+
+    uint newIndex = 0;
+    if (isAlive) {
+        newIndex = atomic_fetch_add_explicit(
+            &aliveCounter, 1, memory_order_relaxed
+        );
     }
     threadgroup_barrier(mem_flags::mem_device);
-    
-    if (particles0[id].age > 0) {
-        uint index = atomic_fetch_add_explicit(&aliveCounter, 1, memory_order_relaxed);
-        particles1[index] = particles0[id];
+
+    if (isAlive && newIndex < numThreads) {
+        particles1[newIndex] = particle;
     }
 }
 
