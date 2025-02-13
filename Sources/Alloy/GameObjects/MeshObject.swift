@@ -9,15 +9,15 @@ import Foundation
 import Metal
 
 open class AEMeshObject: AEGameObject {
-    var mesh: any AEMesh
-    var material: any AEMaterial
+    public var mesh: any AEMesh
+    public var material: any AEMaterial
 
-    init(mesh: any AEMesh, material: any AEMaterial) {
+    public init(mesh: any AEMesh, material: any AEMaterial) {
         self.mesh = mesh
         self.material = material
     }
 
-    public override func performRender(commandEncoder: MTLRenderCommandEncoder) {
+    open override func performRender(commandEncoder: MTLRenderCommandEncoder) {
         let state = self.material.load()
 
         commandEncoder.setRenderPipelineState(state)

@@ -39,7 +39,7 @@ open class AEGameObject {
         }
     }
 
-    public func initialize() {
+    open func initialize() {
         forEach { child in
             child.initialize()
         }
