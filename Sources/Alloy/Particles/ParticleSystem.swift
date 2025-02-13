@@ -53,6 +53,16 @@ extension Atomic where T == Bool {
     }
 }
 
+extension Atomic where T == Int {
+    func modInc(_ maxCount: Int) {
+        pthread_mutex_lock(&mutex)
+        defer {
+            pthread_mutex_unlock(&mutex)
+        }
+        self.value = (self.value + 1) % maxCount
+    }
+}
+
 open class AEParticlesAsset: AEAsset {
     public init(
         emitShader: AEShader? = nil,
@@ -170,9 +180,7 @@ open class AEParticleSystem: AEGameObject {
 
         commandBuffer.addCompletedHandler { _ in
             self.updateBuffers.swapAt(0, 1)
-            self.renderTarget.set(
-                (self.renderTarget.get() + 1) % 2
-            )
+            self.renderTarget.modInc(2)
             self.updateCompleted.set(true)
         }
 
