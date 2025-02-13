@@ -281,7 +281,7 @@ open class AEParticleSystem: AEGameObject {
         commandEncoder.copy(
             from: updateBuffers[0],
             sourceOffset: 0,
-            to: renderBuffers[0],
+            to: renderBuffers[(renderTarget.get() + 1) % 2],
             destinationOffset: 0,
             size: MemoryLayout<Particle>.stride * maxCount
         )
