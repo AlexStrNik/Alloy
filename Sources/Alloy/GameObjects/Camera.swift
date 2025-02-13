@@ -37,7 +37,7 @@ open class AECamera: AEGameObject {
         self.transform.matrix.inverse
     }
 
-    override init() {
+    public override init() {
         super.init()
         updateProjectionMatrix()
     }
