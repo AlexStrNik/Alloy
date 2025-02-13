@@ -33,6 +33,10 @@ import SwiftUI
             view.colorPixelFormat = .bgra10_xr
             view.depthStencilPixelFormat = .depth32Float
 
+            view.layer.isOpaque = false
+            view.isOpaque = false
+            view.backgroundColor = .clear
+
             context.coordinator.mtkView = view
 
             return view
@@ -65,6 +69,8 @@ import SwiftUI
 
             view.colorPixelFormat = .bgra10_xr
             view.depthStencilPixelFormat = .depth32Float
+
+            view.layer?.isOpaque = false
 
             context.coordinator.mtkView = view
 
