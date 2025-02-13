@@ -35,7 +35,7 @@ open class AEScene: AEAsset {
         self.currentCamera = currentCamera
     }
 
-    public func performUpdate(deltaTime: Float) {
+    open func performUpdate(deltaTime: Float) {
         self.currentTime += deltaTime
 
         sceneObject.performUpdate(deltaTime: deltaTime)
@@ -46,7 +46,7 @@ open class AEScene: AEAsset {
         self.uniforms.deltaTime = deltaTime
     }
 
-    public func performRender(commandEncoder: MTLRenderCommandEncoder) {
+    open func performRender(commandEncoder: MTLRenderCommandEncoder) {
         sceneObject.performRender(commandEncoder: commandEncoder)
     }
 
@@ -59,7 +59,7 @@ open class AEScene: AEAsset {
         sceneObject.initialize()
     }
 
-    public func load() {
+    open func load() {
         AEDefaultAssets.shared.load()
     }
 }

@@ -17,7 +17,7 @@ open class AEDefaultAssets: AEAsset {
 
     private init() {}
 
-    func load() {
+    public func load() {
         _ = self.assets.map { $0.load() }
     }
 }

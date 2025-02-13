@@ -18,7 +18,7 @@ open class AEModelMesh: AEMesh {
 
     private var meshBuffer: AEMeshBuffer?
 
-    func load() -> AEMeshBuffer {
+    public func load() -> AEMeshBuffer {
         if let meshBuffer = self.meshBuffer {
             return meshBuffer
         }

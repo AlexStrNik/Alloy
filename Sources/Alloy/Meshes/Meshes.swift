@@ -24,7 +24,7 @@ open class AEMeshesAsset: AEAsset {
 open class AEMeshes {
     private init() {}
 
-    static let plane: AEPlane = {
+    public static let plane: AEPlane = {
         AEPlane()
     }()
 }

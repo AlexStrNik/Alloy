@@ -11,15 +11,15 @@ import Metal
 open class AEUnlitMaterial: AEMaterial {
     private var state: MTLRenderPipelineState?
 
-    func getVertexShader() -> AEShader {
+    public func getVertexShader() -> AEShader {
         AEShader(named: "unlit_vertex_shader")
     }
 
-    func getFragmentShader() -> AEShader {
+    public func getFragmentShader() -> AEShader {
         AEShader(named: "unlit_fragment_shader")
     }
 
-    func makeRenderPipelineDescriptor() -> MTLRenderPipelineDescriptor {
+    public func makeRenderPipelineDescriptor() -> MTLRenderPipelineDescriptor {
         let pipelineDescriptor = MTLRenderPipelineDescriptor()
 
         pipelineDescriptor.vertexFunction = getVertexShader().load()
@@ -31,11 +31,11 @@ open class AEUnlitMaterial: AEMaterial {
         return pipelineDescriptor
     }
 
-    func encode(to commandEncoder: MTLRenderCommandEncoder) {
+    public func encode(to commandEncoder: MTLRenderCommandEncoder) {
 
     }
 
-    func load() -> MTLRenderPipelineState {
+    public func load() -> MTLRenderPipelineState {
         if let state = self.state {
             return state
         }
