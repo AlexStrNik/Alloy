@@ -47,7 +47,7 @@ open class AEModelMesh: AEMesh {
     }
 
     private static var vertexDescriptor: MDLVertexDescriptor {
-        let descriptor = MTKModelIOVertexDescriptorFromMetal(Vertex.descriptor)
+        let descriptor = MTKModelIOVertexDescriptorFromMetal(AEVertex.descriptor)
         (descriptor.attributes[0] as! MDLVertexAttribute).name = MDLVertexAttributePosition
         (descriptor.attributes[1] as! MDLVertexAttribute).name = MDLVertexAttributeNormal
         (descriptor.attributes[2] as! MDLVertexAttribute).name = MDLVertexAttributeTextureCoordinate

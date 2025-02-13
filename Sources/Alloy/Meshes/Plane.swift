@@ -10,7 +10,7 @@ import Foundation
 open class AEPlane: AEMesh {
     var name: String = "Plane"
 
-    private var vertices: [Vertex] = [
+    private var vertices: [AEVertex] = [
         .init(
             position: .init(1, 1, 0),
             normal: .init(0, 1, 0),
@@ -48,7 +48,7 @@ open class AEPlane: AEMesh {
         self.meshBuffer = AEMeshBuffer(
             vertices: AERenderer.device.makeBuffer(
                 bytes: vertices,
-                length: MemoryLayout<Vertex>.stride * self.vertices.count
+                length: MemoryLayout<AEVertex>.stride * self.vertices.count
             )!,
             indices: AERenderer.device.makeBuffer(
                 bytes: indices,

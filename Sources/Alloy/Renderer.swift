@@ -16,8 +16,8 @@ open class AERenderer: NSObject, MTKViewDelegate {
 
     static var currentScene: AEScene?
 
-    static var colorPixelFormat: MTLPixelFormat!
-    static var depthStencilPixelFormat: MTLPixelFormat!
+    public static var colorPixelFormat: MTLPixelFormat!
+    public static var depthStencilPixelFormat: MTLPixelFormat!
 
     static var aspectRatio: Float = 1
 

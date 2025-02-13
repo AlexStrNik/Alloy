@@ -8,12 +8,12 @@
 import Foundation
 import Metal
 
-public struct Vertex {
+public struct AEVertex {
     var position: SIMD3<Float>
     var normal: SIMD3<Float>
     var uv: SIMD2<Float>
 
-    static var descriptor: MTLVertexDescriptor = {
+    public static var descriptor: MTLVertexDescriptor = {
         var descriptor = MTLVertexDescriptor()
 
         descriptor.attributes[0].format = .float3
@@ -28,7 +28,7 @@ public struct Vertex {
         descriptor.attributes[2].bufferIndex = 0
         descriptor.attributes[2].offset = MemoryLayout<SIMD3<Float>>.stride * 2
 
-        descriptor.layouts[0].stride = MemoryLayout<Vertex>.stride
+        descriptor.layouts[0].stride = MemoryLayout<AEVertex>.stride
 
         return descriptor
     }()

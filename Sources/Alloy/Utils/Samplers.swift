@@ -14,11 +14,11 @@ enum Sampler {
 
 struct SamplersCache {
     private var cache: [Sampler: MTLSamplerState] = [:]
-    
+
     static var shared: SamplersCache = .init()
-    
+
     private init() {}
-    
+
     subscript(_ sampler: Sampler) -> MTLSamplerState? {
         get {
             return cache[sampler]
@@ -29,23 +29,23 @@ struct SamplersCache {
     }
 }
 
-struct Samplers {
-    static func makeLinearSampler() -> MTLSamplerState {
+public struct AESamplers {
+    public static func makeLinearSampler() -> MTLSamplerState {
         if let state = SamplersCache.shared[.linear] {
             return state
         }
-        
+
         let samplerDescriptor = MTLSamplerDescriptor()
         samplerDescriptor.normalizedCoordinates = true
         samplerDescriptor.minFilter = .linear
         samplerDescriptor.magFilter = .linear
         samplerDescriptor.mipFilter = .linear
-            
+
         let state = AERenderer.device.makeSamplerState(descriptor: samplerDescriptor)!
         SamplersCache.shared[.linear] = state
-        
+
         return state
     }
-    
-    private init () {}
+
+    private init() {}
 }
