@@ -17,4 +17,9 @@ struct Particle {
 public struct AEParticleParams {
     public var mesh: any AEMesh
     public var material: any AEMaterial
+
+    public init(mesh: any AEMesh, material: any AEMaterial) {
+        self.mesh = mesh
+        self.material = material
+    }
 }

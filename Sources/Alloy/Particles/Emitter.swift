@@ -14,6 +14,20 @@ public struct AEEmitterParams {
     public var velocity: Range3
     public var lifeTime: Range
     public var birthRate: Float
+
+    public init(
+        position: Range3,
+        scale: Range,
+        velocity: Range3,
+        lifeTime: Range,
+        birthRate: Float
+    ) {
+        self.position = position
+        self.scale = scale
+        self.velocity = velocity
+        self.lifeTime = lifeTime
+        self.birthRate = birthRate
+    }
 }
 
 public struct EmitterUniforms {

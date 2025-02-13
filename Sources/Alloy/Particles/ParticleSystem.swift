@@ -44,7 +44,7 @@ open class AEParticleSystem: AEGameObject {
 
     private var frameCounter: UInt64 = 0
 
-    init(
+    public init(
         maxCount: Int,
         emitterParams: AEEmitterParams,
         particleParams: AEParticleParams
