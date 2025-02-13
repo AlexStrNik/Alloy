@@ -8,19 +8,19 @@
 import Foundation
 import Metal
 
-class AEGameObject {
+public class AEGameObject {
     var transform: AETransform = .init()
-    
+
     private(set) var parent: AEGameObject?
 
     private var head: AEGameObject?
     private var tail: AEGameObject?
-    
+
     private var next: AEGameObject?
     private var prev: AEGameObject?
-    
+
     private var destroyed: Bool = false
-    
+
     func performUpdate(deltaTime: Float) {
         forEach { child in
             child.performUpdate(deltaTime: deltaTime)
@@ -36,7 +36,7 @@ class AEGameObject {
             self.tail = tail.prev
         }
     }
-    
+
     func initialize() {
         forEach { child in
             child.initialize()
@@ -48,28 +48,28 @@ class AEGameObject {
             child.performRender(commandEncoder: commandEncoder)
         }
     }
-    
+
     func addChild(_ gameObject: AEGameObject) {
         gameObject.parent = self
         gameObject.transform.parent = self.transform
-        
+
         if let tailNode = tail {
             tailNode.next = gameObject
             gameObject.prev = tailNode
         } else {
             head = gameObject
         }
-        
+
         tail = gameObject
     }
-    
+
     func destroy() {
         self.destroyed = true
     }
-    
+
     private func forEach(_ f: (AEGameObject) -> Void) {
         var cursor = head
-        
+
         while let node = cursor {
             f(node)
             cursor = cursor?.next

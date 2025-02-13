@@ -8,15 +8,15 @@
 import Foundation
 import simd
 
-class AETransform {
+public class AETransform {
     var parent: AETransform?
-    
+
     var position: SIMD3<Float> = .zero {
         didSet {
             updateMatrix()
         }
     }
-    
+
     var rotation: SIMD3<Float> = .zero {
         didSet {
             updateMatrix()
@@ -27,20 +27,20 @@ class AETransform {
             updateMatrix()
         }
     }
-    
+
     private var _matrix: float4x4 = matrix_identity_float4x4
-    
+
     var matrix: float4x4 {
         matrix_multiply(parent?.matrix ?? matrix_identity_float4x4, _matrix)
     }
-    
+
     init() {
         updateMatrix()
     }
-    
+
     private func updateMatrix() {
         var matrix = matrix_identity_float4x4
-        
+
         matrix = matrix_multiply(
             matrix,
             .init(translationBy: position)
@@ -61,7 +61,7 @@ class AETransform {
             matrix,
             .init(scaleBy: scale)
         )
-        
+
         self._matrix = matrix
     }
 }

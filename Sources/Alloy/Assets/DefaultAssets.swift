@@ -7,17 +7,17 @@
 
 import Foundation
 
-class AEDefaultAssets: AEAsset {
+public class AEDefaultAssets: AEAsset {
     static let shared: AEDefaultAssets = .init()
-    
+
     private var assets: [any AEAsset] = [
         AEParticlesAsset.shared,
-        AEMeshesAsset.shared
+        AEMeshesAsset.shared,
     ]
-    
+
     private init() {}
-    
-    func load() -> Void {
+
+    func load() {
         _ = self.assets.map { $0.load() }
     }
 }

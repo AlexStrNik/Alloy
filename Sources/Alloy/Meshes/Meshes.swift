@@ -7,23 +7,23 @@
 
 import Foundation
 
-class AEMeshesAsset: AEAsset {
+public class AEMeshesAsset: AEAsset {
     private init() {}
-    
+
     static let shared: AEMeshesAsset = .init()
-    
+
     private var assets: [any AEAsset] = [
-       AEMeshes.plane
+        AEMeshes.plane
     ]
-    
-    func load() -> Void {
+
+    func load() {
         _ = assets.map { $0.load() }
     }
 }
 
-class AEMeshes {
+public class AEMeshes {
     private init() {}
-    
+
     static let plane: AEPlane = {
         AEPlane()
     }()
