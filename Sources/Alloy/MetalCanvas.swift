@@ -13,6 +13,10 @@ import SwiftUI
     public struct MetalCanvas: UIViewRepresentable {
         public var onReady: () -> Void
 
+        public init(onReady: @escaping () -> Void) {
+            self.onReady = onReady
+        }
+
         public func updateUIView(_ uiView: MTKView, context: Context) {
 
         }
@@ -41,6 +45,10 @@ import SwiftUI
 #elseif os(macOS)
     public struct MetalCanvas: NSViewRepresentable {
         public var onReady: () -> Void
+
+        public init(onReady: @escaping () -> Void) {
+            self.onReady = onReady
+        }
 
         public func updateNSView(_ nsView: MTKView, context: Context) {
 
