@@ -11,6 +11,8 @@ import Metal
 open class AEUnlitMaterial: AEMaterial {
     private var state: MTLRenderPipelineState?
 
+    public init() {}
+
     open func getVertexShader() -> AEShader {
         AEShader(named: "unlit_vertex_shader")
     }
