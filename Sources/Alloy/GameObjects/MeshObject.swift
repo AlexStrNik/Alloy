@@ -21,7 +21,7 @@ open class AEMeshObject: AEGameObject {
         let state = self.material.load()
 
         commandEncoder.setRenderPipelineState(state)
-        commandEncoder.setDepthStencilState(DepthStencils.makeLessDepthStencil())
+        commandEncoder.setDepthStencilState(AEDepthStencils.makeLessDepthStencil())
 
         let buffer = self.mesh.load()
 

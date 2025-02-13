@@ -191,7 +191,7 @@ open class AEParticleSystem: AEGameObject {
         let state = self.particleParams.material.load()
 
         commandEncoder.setRenderPipelineState(state)
-        commandEncoder.setDepthStencilState(DepthStencils.makeLessDepthStencil())
+        commandEncoder.setDepthStencilState(AEDepthStencils.makeLessDepthStencil())
 
         let buffer = self.particleParams.mesh.load()
 
