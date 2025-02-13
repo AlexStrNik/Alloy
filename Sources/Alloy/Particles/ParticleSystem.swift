@@ -38,16 +38,14 @@ class AtomicSwap {
 }
 
 open class AEParticlesAsset: AEAsset {
-    public init() {
-        self.emitShader = AEShader(named: "emit_particles", isInternal: true)
-        self.updateShader = AEShader(named: "update_particles", isInternal: true)
-        self.sortShader = AEShader(named: "sort_particles", isInternal: true)
-    }
-
-    public init(emitShader: AEShader, updateShader: AEShader, sortShader: AEShader) {
-        self.emitShader = emitShader
-        self.updateShader = updateShader
-        self.sortShader = sortShader
+    public init(
+        emitShader: AEShader? = nil,
+        updateShader: AEShader? = nil,
+        sortShader: AEShader? = nil
+    ) {
+        self.emitShader = emitShader ?? AEShader(named: "emit_particles", isInternal: true)
+        self.updateShader = updateShader ?? AEShader(named: "update_particles", isInternal: true)
+        self.sortShader = sortShader ?? AEShader(named: "sort_particles", isInternal: true)
     }
 
     public static let `default`: AEParticlesAsset = .init()
