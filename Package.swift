@@ -10,11 +10,16 @@ let package = Package(
         .library(
             name: "Alloy",
             targets: ["Alloy"]
-        ),
+        )
     ],
     targets: [
         .target(
-            name: "Alloy"
-        ),
+            name: "Alloy",
+            resources: [
+                .process("Shaders/Shared.metal"),
+                .process("Shaders/Unlit.metal"),
+                .process("Particles/Particles.metal"),
+            ]
+        )
     ]
 )
