@@ -11,7 +11,7 @@ open class AEDefaultAssets: AEAsset {
     static let shared: AEDefaultAssets = .init()
 
     private var assets: [any AEAsset] = [
-        AEParticlesAsset.shared,
+        AEParticlesAsset.default,
         AEMeshesAsset.shared,
     ]
 
