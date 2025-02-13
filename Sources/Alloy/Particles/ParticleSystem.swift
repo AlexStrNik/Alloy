@@ -38,6 +38,21 @@ class Atomic<T> {
     }
 }
 
+extension Atomic where T == Bool {
+    func toggleTrue() -> Bool {
+        pthread_mutex_lock(&mutex)
+        defer {
+            pthread_mutex_unlock(&mutex)
+        }
+        let value = self.value
+        if value {
+            self.value = false
+            return true
+        }
+        return false
+    }
+}
+
 open class AEParticlesAsset: AEAsset {
     public init(
         emitShader: AEShader? = nil,
@@ -122,13 +137,13 @@ open class AEParticleSystem: AEGameObject {
     }
 
     public override func performUpdate(deltaTime: Float) {
-        if !updateCompleted.get() {
+        if !updateCompleted.toggleTrue() {
             return
         }
-        self.updateCompleted.set(false)
 
         let aliveParticlesPtr = self.aliveCounterBuffer.contents().bindMemory(
-            to: UInt32.self, capacity: 1)
+            to: UInt32.self, capacity: 1
+        )
         self.aliveCount.set(
             min(aliveParticlesPtr.pointee, UInt32(self.maxCount))
         )
