@@ -34,7 +34,8 @@ open class AEParticleSystem: AEGameObject {
 
     private var maxCount: Int
 
-    private var particleBuffers: [MTLBuffer] = []
+    private var updateBuffers: [MTLBuffer] = []
+    private var renderBuffers: [MTLBuffer] = []
     private var aliveCounterBuffer: MTLBuffer!
 
     private var aliveCount: UInt32 = 0
@@ -55,7 +56,15 @@ open class AEParticleSystem: AEGameObject {
     }
 
     public override func initialize() {
-        particleBuffers = [
+        updateBuffers = [
+            AERenderer.device.makeBuffer(
+                length: MemoryLayout<Particle>.stride * maxCount
+            )!,
+            AERenderer.device.makeBuffer(
+                length: MemoryLayout<Particle>.stride * maxCount
+            )!,
+        ]
+        renderBuffers = [
             AERenderer.device.makeBuffer(
                 length: MemoryLayout<Particle>.stride * maxCount
             )!,
@@ -91,8 +100,10 @@ open class AEParticleSystem: AEGameObject {
 
         sortParticles(commandBuffer: commandBuffer)
 
+        copyParticles(commandBuffer: commandBuffer)
+
         commandBuffer.addCompletedHandler { _ in
-            self.particleBuffers.swapAt(0, 1)
+            self.updateBuffers.swapAt(0, 1)
         }
 
         commandBuffer.commit()
@@ -121,7 +132,7 @@ open class AEParticleSystem: AEGameObject {
 
         let threadsPerGrid = MTLSize(width: Int(count), height: 1, depth: 1)
         commandEncoder.setComputePipelineState(state)
-        commandEncoder.setBuffer(particleBuffers[0], offset: 0, index: 0)
+        commandEncoder.setBuffer(updateBuffers[0], offset: 0, index: 0)
         commandEncoder.setBytes(
             &emitterUniforms, length: MemoryLayout<EmitterUniforms>.stride, index: 1)
         commandEncoder.setBytes(
@@ -142,7 +153,7 @@ open class AEParticleSystem: AEGameObject {
 
         let threadsPerGrid = MTLSize(width: Int(aliveCount), height: 1, depth: 1)
         commandEncoder.setComputePipelineState(state)
-        commandEncoder.setBuffer(particleBuffers[0], offset: 0, index: 0)
+        commandEncoder.setBuffer(updateBuffers[0], offset: 0, index: 0)
         commandEncoder.setBytes(
             &AERenderer.currentScene!.uniforms, length: MemoryLayout<AESceneUniforms>.stride,
             index: 1
@@ -163,8 +174,8 @@ open class AEParticleSystem: AEGameObject {
 
         let threadsPerGrid = MTLSize(width: maxCount, height: 1, depth: 1)
         commandEncoder.setComputePipelineState(state)
-        commandEncoder.setBuffer(particleBuffers[0], offset: 0, index: 0)
-        commandEncoder.setBuffer(particleBuffers[1], offset: 0, index: 1)
+        commandEncoder.setBuffer(updateBuffers[0], offset: 0, index: 0)
+        commandEncoder.setBuffer(updateBuffers[1], offset: 0, index: 1)
         commandEncoder.setBuffer(aliveCounterBuffer, offset: 0, index: 2)
         commandEncoder.dispatchThreads(
             threadsPerGrid, threadsPerThreadgroup: threadsPerThreadGroup
@@ -177,11 +188,24 @@ open class AEParticleSystem: AEGameObject {
         let blitEncoder = commandBuffer.makeBlitCommandEncoder()!
 
         blitEncoder.fill(
-            buffer: particleBuffers[1],
+            buffer: updateBuffers[1],
             range: 0..<MemoryLayout<Particle>.stride * maxCount,
             value: 0
         )
         blitEncoder.endEncoding()
+    }
+
+    private func copyParticles(commandBuffer: MTLCommandBuffer) {
+        let commandEncoder = commandBuffer.makeBlitCommandEncoder()!
+
+        commandEncoder.copy(
+            from: updateBuffers[0],
+            sourceOffset: 0,
+            to: renderBuffers[0],
+            destinationOffset: 0,
+            size: MemoryLayout<Particle>.stride * maxCount
+        )
+        commandEncoder.endEncoding()
     }
 
     public override func performRender(commandEncoder: MTLRenderCommandEncoder) {
@@ -201,9 +225,9 @@ open class AEParticleSystem: AEGameObject {
             &AERenderer.currentScene!.uniforms, length: MemoryLayout<AESceneUniforms>.stride,
             index: 1
         )
-        commandEncoder.setVertexBuffer(particleBuffers[0], offset: 0, index: 2)
-
-        commandEncoder.setFragmentBuffer(particleBuffers[0], offset: 0, index: 1)
+        renderBuffers.swapAt(0, 1)
+        commandEncoder.setVertexBuffer(renderBuffers[1], offset: 0, index: 2)
+        commandEncoder.setFragmentBuffer(renderBuffers[1], offset: 0, index: 1)
         self.particleParams.material.encode(to: commandEncoder)
 
         commandEncoder.drawIndexedPrimitives(
