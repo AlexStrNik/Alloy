@@ -172,7 +172,7 @@ open class AEParticleSystem: AEGameObject {
             updateParticles(commandBuffer: commandBuffer)
         }
 
-        clearParticles(commandBuffer: commandBuffer)
+        // clearParticles(commandBuffer: commandBuffer)
 
         sortParticles(commandBuffer: commandBuffer)
 
