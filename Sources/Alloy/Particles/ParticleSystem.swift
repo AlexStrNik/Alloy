@@ -42,7 +42,7 @@ open class AEParticleSystem: AEGameObject {
         UInt32(maxCount) - aliveCount
     }
 
-    private var frameCounter: UInt64 = 0
+    private var birthAcc: Float = 0
 
     public init(
         maxCount: Int,
@@ -73,14 +73,14 @@ open class AEParticleSystem: AEGameObject {
             to: UInt32.self, capacity: 1)
         self.aliveCount = min(aliveParticlesPtr.pointee, UInt32(self.maxCount))
 
-        frameCounter = (frameCounter + 1) % 100
-
         let commandBuffer = AERenderer.commandQueue.makeCommandBuffer()!
 
-        let emitCount = max(0, min(UInt32(emitterParams.birthRate * deltaTime), deadCount))
+        self.birthAcc += deltaTime * Float(emitterParams.birthRate)
+        let emitCount = max(0, min(UInt32(self.birthAcc), deadCount))
 
         if emitCount > 0 {
             emitParticles(count: emitCount, commandBuffer: commandBuffer)
+            self.birthAcc -= Float(emitCount)
         }
 
         if aliveCount > 0 {
