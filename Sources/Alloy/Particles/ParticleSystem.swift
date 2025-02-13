@@ -81,6 +81,7 @@ open class AEParticleSystem: AEGameObject {
     private var deadCount: UInt32 {
         UInt32(maxCount) - aliveCount.get()
     }
+    private var updateCompleted: Atomic<Bool> = .init(value: true)
 
     private var birthAcc: Float = 0
 
@@ -121,6 +122,11 @@ open class AEParticleSystem: AEGameObject {
     }
 
     public override func performUpdate(deltaTime: Float) {
+        if !updateCompleted.get() {
+            return
+        }
+        self.updateCompleted.set(false)
+
         let aliveParticlesPtr = self.aliveCounterBuffer.contents().bindMemory(
             to: UInt32.self, capacity: 1)
         self.aliveCount.set(
@@ -152,6 +158,7 @@ open class AEParticleSystem: AEGameObject {
             self.renderTarget.set(
                 (self.renderTarget.get() + 1) % 2
             )
+            self.updateCompleted.set(true)
         }
 
         commandBuffer.commit()
