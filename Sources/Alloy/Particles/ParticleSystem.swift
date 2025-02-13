@@ -13,11 +13,11 @@ open class AEParticlesAsset: AEAsset {
 
     static let shared: AEParticlesAsset = .init()
 
-    let emitShader: AEShader = AEShader(named: "emit_particles")
+    let emitShader: AEShader = AEShader(named: "emit_particles", isInternal: true)
 
-    let updateShader: AEShader = AEShader(named: "update_particles")
+    let updateShader: AEShader = AEShader(named: "update_particles", isInternal: true)
 
-    let sortShader: AEShader = AEShader(named: "sort_particles")
+    let sortShader: AEShader = AEShader(named: "sort_particles", isInternal: true)
 
     private var assets: [any AEAsset] {
         [emitShader, updateShader, sortShader]

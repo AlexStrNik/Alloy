@@ -14,11 +14,11 @@ open class AEUnlitMaterial: AEMaterial {
     public init() {}
 
     open func getVertexShader() -> AEShader {
-        AEShader(named: "unlit_vertex_shader")
+        AEShader(named: "unlit_vertex_shader", isInternal: true)
     }
 
     open func getFragmentShader() -> AEShader {
-        AEShader(named: "unlit_fragment_shader")
+        AEShader(named: "unlit_fragment_shader", isInternal: true)
     }
 
     open func makeRenderPipelineDescriptor() -> MTLRenderPipelineDescriptor {

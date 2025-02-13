@@ -10,6 +10,7 @@ import MetalKit
 
 open class AERenderer: NSObject, MTKViewDelegate {
     static var device: MTLDevice!
+    static var internalLibrary: MTLLibrary!
     static var library: MTLLibrary!
     static var commandQueue: MTLCommandQueue!
     static var textureLoader: MTKTextureLoader!
@@ -37,6 +38,9 @@ open class AERenderer: NSObject, MTKViewDelegate {
     init(onReady: @escaping () -> Void) {
         AERenderer.device = MTLCreateSystemDefaultDevice()!
         AERenderer.library = AERenderer.device.makeDefaultLibrary()!
+        AERenderer.internalLibrary = try! AERenderer.device.makeDefaultLibrary(
+            bundle: Bundle.module
+        )
         AERenderer.commandQueue = AERenderer.device.makeCommandQueue()!
         AERenderer.textureLoader = MTKTextureLoader(device: AERenderer.device)
 

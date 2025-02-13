@@ -10,11 +10,11 @@ import Metal
 
 open class AEParticleMaterial: AEUnlitMaterial {
     open override func getVertexShader() -> AEShader {
-        AEShader(named: "particles_vertex_shader")
+        AEShader(named: "particles_vertex_shader", isInternal: true)
     }
 
     open override func getFragmentShader() -> AEShader {
-        AEShader(named: "particles_fragment_shader")
+        AEShader(named: "particles_fragment_shader", isInternal: true)
     }
 
     open override func makeRenderPipelineDescriptor() -> MTLRenderPipelineDescriptor {
