@@ -9,9 +9,15 @@ import Foundation
 import Metal
 
 public struct AEVertex {
-    var position: SIMD3<Float>
-    var normal: SIMD3<Float>
-    var uv: SIMD2<Float>
+    public var position: SIMD3<Float>
+    public var normal: SIMD3<Float>
+    public var uv: SIMD2<Float>
+
+    public init(position: SIMD3<Float>, normal: SIMD3<Float>, uv: SIMD2<Float>) {
+        self.position = position
+        self.normal = normal
+        self.uv = uv
+    }
 
     public static var descriptor: MTLVertexDescriptor = {
         var descriptor = MTLVertexDescriptor()
