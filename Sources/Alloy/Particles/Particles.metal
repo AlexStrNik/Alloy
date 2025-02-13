@@ -70,13 +70,13 @@ kernel void sort_particles(
     device atomic_uint &aliveCounter [[buffer(2)]],
     uint id [[ thread_position_in_grid ]]
 ){
-    if (all(id == 0)) {
-        atomic_store_explicit(&aliveCounter, 0, memory_order_relaxed);
+    if (id == 0) {
+        atomic_store_explicit(&aliveCounter, 0, memory_order_seq_cst);
     }
-    threadgroup_barrier(mem_flags::mem_threadgroup);
+    threadgroup_barrier(mem_flags::mem_device);
     
     if (particles0[id].age > 0) {
-        uint index = atomic_fetch_add_explicit(&aliveCounter, 1, memory_order_relaxed);
+        uint index = atomic_fetch_add_explicit(&aliveCounter, 1, memory_order_seq_cst);
         particles1[index] = particles0[id];
     }
 }
