@@ -47,7 +47,7 @@ extension float4x4 {
 extension SIMD3<Float> {
     public static var xAxis: SIMD3<Float> = .init(1, 0, 0)
     public static var yAxis: SIMD3<Float> = .init(0, 1, 0)
-    public static var zAxis: SIMD3<Float> = .init(0, 1, 0)
+    public static var zAxis: SIMD3<Float> = .init(0, 0, 1)
 }
 
 extension SIMD4<Float> {
