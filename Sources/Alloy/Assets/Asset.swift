@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol AEAsset<AssetType> {
+public protocol AEAsset<AssetType> {
     associatedtype AssetType
 
     func load() -> AssetType

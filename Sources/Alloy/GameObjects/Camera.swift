@@ -10,7 +10,7 @@ import Metal
 import simd
 
 open class AECamera: AEGameObject {
-    var fov: Float = 60 {
+    public var fov: Float = 60 {
         didSet {
             updateProjectionMatrix()
         }
@@ -20,12 +20,12 @@ open class AECamera: AEGameObject {
             updateProjectionMatrix()
         }
     }
-    var nearClipping: Float = 0.001 {
+    public var nearClipping: Float = 0.001 {
         didSet {
             updateProjectionMatrix()
         }
     }
-    var farClipping: Float = 100 {
+    public var farClipping: Float = 100 {
         didSet {
             updateProjectionMatrix()
         }

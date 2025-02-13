@@ -45,14 +45,14 @@ open class AERenderer: NSObject, MTKViewDelegate {
         super.init()
     }
 
-    func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
+    public func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         AERenderer.aspectRatio = Float(view.bounds.width / view.bounds.height)
         if let currentScene = AERenderer.currentScene {
             currentScene.currentCamera.aspectRatio = AERenderer.aspectRatio
         }
     }
 
-    func draw(in view: MTKView) {
+    public func draw(in view: MTKView) {
         guard let currentScene = AERenderer.currentScene, !AERenderer.isPaused else {
             return
         }
@@ -76,22 +76,22 @@ open class AERenderer: NSObject, MTKViewDelegate {
         commandBuffer.commit()
     }
 
-    static func loadScene(_ scene: AEScene) {
+    public static func loadScene(_ scene: AEScene) {
         AERenderer.currentScene = scene
         scene.load()
         scene.initialize()
         scene.currentCamera.aspectRatio = AERenderer.aspectRatio
     }
 
-    static func pause() {
+    public static func pause() {
         AERenderer.isPaused = true
     }
 
-    static func play() {
+    public static func play() {
         AERenderer.isPaused = false
     }
 
-    static func togglePlay() {
+    public static func togglePlay() {
         if AERenderer.isPaused {
             play()
         } else {

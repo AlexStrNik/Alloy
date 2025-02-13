@@ -23,14 +23,14 @@ open class AEParticlesAsset: AEAsset {
         [emitShader, updateShader, sortShader]
     }
 
-    func load() {
+    public func load() {
         _ = self.assets.map { $0.load() }
     }
 }
 
 open class AEParticleSystem: AEGameObject {
-    var emitterParams: AEEmitterParams
-    var particleParams: AEParticleParams
+    public var emitterParams: AEEmitterParams
+    public var particleParams: AEParticleParams
 
     private var maxCount: Int
 

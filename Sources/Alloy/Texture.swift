@@ -14,11 +14,11 @@ open class AETexture: AEAsset {
 
     private var texture: MTLTexture?
 
-    init(url: URL) {
+    public init(url: URL) {
         self.url = url
     }
 
-    func load() -> MTLTexture {
+    public func load() -> MTLTexture {
         if let texture = texture {
             return texture
         }

@@ -16,7 +16,7 @@ open class AEMeshesAsset: AEAsset {
         AEMeshes.plane
     ]
 
-    func load() {
+    public func load() {
         _ = assets.map { $0.load() }
     }
 }

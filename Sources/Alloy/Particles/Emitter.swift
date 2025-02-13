@@ -8,20 +8,20 @@
 import Foundation
 import simd
 
-struct AEEmitterParams {
-    var position: Range3
-    var scale: Range
-    var velocity: Range3
-    var lifeTime: Range
-    var birthRate: Float
+public struct AEEmitterParams {
+    public var position: Range3
+    public var scale: Range
+    public var velocity: Range3
+    public var lifeTime: Range
+    public var birthRate: Float
 }
 
-struct EmitterUniforms {
-    var position: matrix_float3x2
-    var scale: SIMD2<Float>
-    var velocity: matrix_float3x2
-    var lifeTime: SIMD2<Float>
-    var aliveParticles: UInt32
-    var rngSeedX: Int32
-    var rngSeedY: Int32
+public struct EmitterUniforms {
+    public var position: matrix_float3x2
+    public var scale: SIMD2<Float>
+    public var velocity: matrix_float3x2
+    public var lifeTime: SIMD2<Float>
+    public var aliveParticles: UInt32
+    public var rngSeedX: Int32
+    public var rngSeedY: Int32
 }

@@ -13,11 +13,11 @@ open class AEShader: AEAsset {
 
     private var function: MTLFunction?
 
-    init(named: String) {
+    public init(named: String) {
         self.name = named
     }
 
-    func load() -> MTLFunction {
+    public func load() -> MTLFunction {
         if let function = function {
             return function
         }

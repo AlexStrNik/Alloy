@@ -8,11 +8,11 @@
 import Foundation
 import Metal
 
-protocol AEMaterial: AEAsset where AssetType == MTLRenderPipelineState {
+public protocol AEMaterial: AEAsset where AssetType == MTLRenderPipelineState {
     func getVertexShader() -> AEShader
     func getFragmentShader() -> AEShader
-    
+
     func makeRenderPipelineDescriptor() -> MTLRenderPipelineDescriptor
-    
+
     func encode(to commandEncoder: MTLRenderCommandEncoder)
 }

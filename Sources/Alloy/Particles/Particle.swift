@@ -14,7 +14,7 @@ struct Particle {
     var age: Float
 }
 
-struct AEParticleParams {
-    var mesh: any AEMesh
-    var material: any AEMaterial
+public struct AEParticleParams {
+    public var mesh: any AEMesh
+    public var material: any AEMaterial
 }

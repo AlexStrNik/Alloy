@@ -9,12 +9,12 @@ import Foundation
 import Metal
 import simd
 
-struct AEMeshBuffer {
+public struct AEMeshBuffer {
     var vertices: MTLBuffer
     var indices: MTLBuffer
     var indexCount: Int
 }
 
-protocol AEMesh: AEAsset where AssetType == AEMeshBuffer {
-    
+public protocol AEMesh: AEAsset where AssetType == AEMeshBuffer {
+
 }

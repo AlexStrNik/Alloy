@@ -11,18 +11,18 @@ import simd
 open class AETransform {
     var parent: AETransform?
 
-    var position: SIMD3<Float> = .zero {
+    public var position: SIMD3<Float> = .zero {
         didSet {
             updateMatrix()
         }
     }
 
-    var rotation: SIMD3<Float> = .zero {
+    public var rotation: SIMD3<Float> = .zero {
         didSet {
             updateMatrix()
         }
     }
-    var scale: SIMD3<Float> = .one {
+    public var scale: SIMD3<Float> = .one {
         didSet {
             updateMatrix()
         }
