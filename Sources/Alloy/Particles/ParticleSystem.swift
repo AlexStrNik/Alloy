@@ -36,6 +36,7 @@ open class AEParticleSystem: AEGameObject {
 
     private var updateBuffers: [MTLBuffer] = []
     private var renderBuffers: [MTLBuffer] = []
+    private var renderSwapFlag: Bool = false
     private var aliveCounterBuffer: MTLBuffer!
 
     private var aliveCount: UInt32 = 0
@@ -104,6 +105,7 @@ open class AEParticleSystem: AEGameObject {
 
         commandBuffer.addCompletedHandler { _ in
             self.updateBuffers.swapAt(0, 1)
+            self.renderSwapFlag.toggle()
         }
 
         commandBuffer.commit()
@@ -225,7 +227,12 @@ open class AEParticleSystem: AEGameObject {
             &AERenderer.currentScene!.uniforms, length: MemoryLayout<AESceneUniforms>.stride,
             index: 1
         )
-        renderBuffers.swapAt(0, 1)
+
+        if renderSwapFlag {
+            renderBuffers.swapAt(0, 1)
+            renderSwapFlag.toggle()
+        }
+
         commandEncoder.setVertexBuffer(renderBuffers[1], offset: 0, index: 2)
         commandEncoder.setFragmentBuffer(renderBuffers[1], offset: 0, index: 1)
         self.particleParams.material.encode(to: commandEncoder)
